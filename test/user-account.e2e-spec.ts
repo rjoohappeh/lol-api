@@ -50,12 +50,12 @@ describe('User Account', () => {
         it('should return a 200 with a RankedStatsDto when a response is given by the api', async () => {
             const userAccountService = await app.resolve(UserAccountService);
             const fakeRankedStatsDto = createFakeRankedStatsDto();
-            userAccountService.getRankedStatsBySummonerId = jest.fn(() => Promise.resolve([fakeRankedStatsDto]));
+            userAccountService.getRankedStatsBySummonerName= jest.fn(() => Promise.resolve([fakeRankedStatsDto]));
             
             return request(app.getHttpServer())
                 .get('/user-account/ranked/stats/test')
                 .expect(200)
-                .expect(fakeRankedStatsDto);
+                .expect([fakeRankedStatsDto]);
         });
     })
 });

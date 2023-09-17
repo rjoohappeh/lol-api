@@ -14,9 +14,9 @@ export class UserAccountController {
         return this.userAccountService.getAccountByName(name);
     }
 
-    @Get('/ranked/stats/:summonerId')
-    @UseInterceptors(new NotFoundInterceptor("No ranked stats found with that summoner id"))
-    getRankedStatsBySummonerId(@Param('summonerId') summonerId: string): Promise<RankedStatsDto[]> {
-        return this.userAccountService.getRankedStatsBySummonerId(summonerId);
+    @Get('/ranked/stats/:summonerName')
+    @UseInterceptors(new NotFoundInterceptor("No ranked stats found with that summoner name"))
+    getRankedStatsBySummonerId(@Param('summonerName') summonerName: string): Promise<RankedStatsDto[]> {
+        return this.userAccountService.getRankedStatsBySummonerName(summonerName);
     }
 }

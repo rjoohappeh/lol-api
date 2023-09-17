@@ -26,21 +26,25 @@ export class UserAccountService {
         });
     }
 
-    getRankedStatsBySummonerId(summonerId: string): Promise<RankedStatsDto[]> {
-        const apiKey = this.configService.get<string>('RIOT_API_KEY');
-        const baseUrl = this.configService.get<string>('LOL_NA_BASE_URL');
+    async getRankedStatsBySummonerName(summonerName: string): Promise<RankedStatsDto[]> {
+        const lolAccountDto = await this.getAccountByName(summonerName);
+        if (lolAccountDto) {
+            const apiKey = this.configService.get<string>('RIOT_API_KEY');
+            const baseUrl = this.configService.get<string>('LOL_NA_BASE_URL');
 
-        const path = `/lol/league/v4/entries/by-summoner/${summonerId}?api_key=${apiKey}`;
-        const fullPath = baseUrl + path;
+            const path = `/lol/league/v4/entries/by-summoner/${lolAccountDto.id}?api_key=${apiKey}`;
+            const fullPath = baseUrl + path;
 
-        return firstValueFrom(
-            this.httpService.get<RankedStatsDto[]>(fullPath).pipe(
-                map(response => response.data),
-            )
-        ).catch((err) => {
-            if (err.response.status === 404) {
-                return undefined;
-            }
-        });
+            return firstValueFrom(
+                this.httpService.get<RankedStatsDto[]>(fullPath).pipe(
+                    map(response => response.data),
+                )
+            ).catch((err) => {
+                if (err.response.status === 404) {
+                    return undefined;
+                }
+            });
+        }
+        return undefined;
     }
 }
