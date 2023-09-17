@@ -16,14 +16,14 @@ export class UserAccountService {
         const fullPath = baseUrl + path;
 
         return firstValueFrom(
-                this.httpService.get<LoLAccountDto>(fullPath).pipe(
-                    map(response => response.data),
-                )
-            ).catch((err) => {
-                if (err.response.status === 404) {
-                    return undefined;
-                }
-            });
+            this.httpService.get<LoLAccountDto>(fullPath).pipe(
+                map(response => response.data),
+            )
+        ).catch((err) => {
+            if (err.response.status === 404) {
+                return undefined;
+            }
+        });
     }
 
     getRankedStatsBySummonerId(summonerId: string): Promise<RankedStatsDto[]> {
