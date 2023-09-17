@@ -3,7 +3,7 @@ import { Test } from "@nestjs/testing";
 import * as request from 'supertest';
 import { UserAccountModule } from "../src/user-account/user-account.module";
 import { UserAccountService } from "../src/user-account/user-account.service";
-import { createFakeLolAccountDto } from "./test.util";
+import { createFakeLolAccountDto, createFakeRankedStatsDto } from "./test.util";
 
 describe('User Account', () => {
     let app: INestApplication;
@@ -45,4 +45,17 @@ describe('User Account', () => {
                 .expect(fakeLolAccount);    
         });
     });
+
+    describe('get ranked information by summoner id', () => {
+        it('should return a 200 with a RankedStatsDto when a response is given by the api', async () => {
+            const userAccountService = await app.resolve(UserAccountService);
+            const fakeRankedStatsDto = createFakeRankedStatsDto();
+            userAccountService.getRankedStatsBySummonerId = jest.fn(() => Promise.resolve([fakeRankedStatsDto]));
+            
+            return request(app.getHttpServer())
+                .get('/user-account/ranked/stats/test')
+                .expect(200)
+                .expect(fakeRankedStatsDto);
+        });
+    })
 });

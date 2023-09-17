@@ -1,4 +1,4 @@
-import { LoLAccountDto } from "src/user-account/user-account-types";
+import { LoLAccountDto, RankWithinTier, RankedStatsDto, RankedTier } from "../src/user-account/user-account-types";
 import { faker } from '@faker-js/faker';
 
 export function createFakeLolAccountDto(): LoLAccountDto {
@@ -10,5 +10,23 @@ export function createFakeLolAccountDto(): LoLAccountDto {
         profileIconId: faker.number.int(),
         revisionDate: faker.date.past().getTime(),
         summonerLevel: faker.number.int()
+    };
+}
+
+export function createFakeRankedStatsDto(): RankedStatsDto {
+    return {
+        leagueId: faker.string.uuid(),
+        queueType: faker.string.alpha(),
+        tier: faker.helpers.enumValue(RankedTier),
+        rank: faker.helpers.enumValue(RankWithinTier),
+        summonerId: faker.string.uuid(),
+        summonerName: faker.person.firstName() + faker.person.lastName(),
+        leaguePoints: faker.number.int({min: 0, max: 100}),
+        wins: faker.number.int(),
+        losses: faker.number.int(),
+        veteran: faker.datatype.boolean(),
+        inactive: faker.datatype.boolean(),
+        freshBlood: faker.datatype.boolean(),
+        hotStreak: faker.datatype.boolean()
     };
 }
