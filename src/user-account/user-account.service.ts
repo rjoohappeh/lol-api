@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Observable, catchError, firstValueFrom, map, of } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { LoLAccountDto } from './user-account-types';
 
 @Injectable()

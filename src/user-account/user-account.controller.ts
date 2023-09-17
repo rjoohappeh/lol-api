@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param, UseInterceptors } from '@nestjs/common';
 import { UserAccountService } from './user-account.service';
 import { LoLAccountDto } from './user-account-types';
 import { NotFoundInterceptor } from 'src/interceptors/not-found.interceptor';
