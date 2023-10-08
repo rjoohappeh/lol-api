@@ -3,10 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom, map } from 'rxjs';
 import { LoLAccountDto, RankedStatsDto } from './user-account-types';
+import { UserAccountRepository } from './user-account.repository';
 
 @Injectable()
 export class UserAccountService {
-    constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
+    constructor(private readonly httpService: HttpService, 
+        private readonly configService: ConfigService,
+        private readonly userAccountRepo: UserAccountRepository) {}
 
     getAccountByName(name: string): Promise<LoLAccountDto> {
         const apiKey = this.configService.get<string>('RIOT_API_KEY');
@@ -17,9 +20,16 @@ export class UserAccountService {
 
         return firstValueFrom(
             this.httpService.get<LoLAccountDto>(fullPath).pipe(
-                map(response => response.data),
+                map(response => {
+                    const puuid = response.data.puuid;
+                    if (!this.userAccountRepo.summonerAccountExistsByPuuid(puuid)) {
+                        this.userAccountRepo.createSummonerAccount(puuid);
+                    }
+                    return response.data;
+                }),
             )
         ).catch((err) => {
+            console.log(err.response);
             if (err.response.status === 404) {
                 return undefined;
             }
