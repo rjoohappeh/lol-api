@@ -13,4 +13,5 @@ datasource db {
 model SummonerAccount {
   id     Int      @default(autoincrement()) @id
   puuid  String 
+  name   String
 }

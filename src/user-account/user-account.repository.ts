@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
+import { SummonerAccount } from "@prisma/client";
 
 @Injectable()
 export class UserAccountRepository {
@@ -13,10 +14,12 @@ export class UserAccountRepository {
         }) !== 0;
     }
 
-    async createSummonerAccount(puuid: string) {
+    async createSummonerAccount(data: Omit<SummonerAccount, 'id'>) {
+        const { puuid, name } = data;
         return this.prismaService.summonerAccount.create({
             data: {
-                puuid
+                puuid,
+                name
             }
         });
     }

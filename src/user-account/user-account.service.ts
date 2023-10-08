@@ -21,9 +21,12 @@ export class UserAccountService {
         return firstValueFrom(
             this.httpService.get<LoLAccountDto>(fullPath).pipe(
                 map(response => {
-                    const puuid = response.data.puuid;
-                    if (!this.userAccountRepo.summonerAccountExistsByPuuid(puuid)) {
-                        this.userAccountRepo.createSummonerAccount(puuid);
+                    const summonerAccountInfo = {
+                        puuid: response.data.puuid,
+                        name: response.data.name
+                    }
+                    if (!this.userAccountRepo.summonerAccountExistsByPuuid(summonerAccountInfo.puuid)) {
+                        this.userAccountRepo.createSummonerAccount(summonerAccountInfo);
                     }
                     return response.data;
                 }),
