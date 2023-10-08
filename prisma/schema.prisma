@@ -11,7 +11,11 @@ datasource db {
 }
 
 model SummonerAccount {
-  id     Int      @default(autoincrement()) @id
-  puuid  String 
-  name   String
+  id        String @id
+  accountId String
+  puuid     String 
+  name      String
+  profileIconId Int
+  revisionDate  DateTime
+  summonerLevel Int
 }

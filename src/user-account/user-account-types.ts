@@ -4,7 +4,7 @@ export type LoLAccountDto = {
     puuid: string;
     name: string;
     profileIconId: number;
-    revisionDate: number;
+    revisionDate: Date;
     summonerLevel: number;
 }
 

@@ -11,28 +11,31 @@ export class UserAccountService {
         private readonly configService: ConfigService,
         private readonly userAccountRepo: UserAccountRepository) {}
 
-    getAccountByName(name: string): Promise<LoLAccountDto> {
+    getRequestPath(apiRoute: string) {
         const apiKey = this.configService.get<string>('RIOT_API_KEY');
         const baseUrl = this.configService.get<string>('LOL_NA_BASE_URL');
 
-        const path = `/lol/summoner/v4/summoners/by-name/${name}?api_key=${apiKey}`;
-        const fullPath = baseUrl + path;
+        const fullPath = baseUrl + apiRoute + `?api_key=${apiKey}`;
+        return fullPath;
+    }
+    
+    async getAccountByName(name: string): Promise<LoLAccountDto> {
+        try {
+            return await this.userAccountRepo.getSummonerAccount({name});
+        } catch (err) {
+            console.log('No account exists with the given name. Will attempt to retrieve and save one.');
+        }
+        const path = this.getRequestPath(`/lol/summoner/v4/summoners/by-name/${name}`);
 
         return firstValueFrom(
-            this.httpService.get<LoLAccountDto>(fullPath).pipe(
+            this.httpService.get<LoLAccountDto>(path).pipe(
                 map(response => {
-                    const summonerAccountInfo = {
-                        puuid: response.data.puuid,
-                        name: response.data.name
-                    }
-                    if (!this.userAccountRepo.summonerAccountExistsByPuuid(summonerAccountInfo.puuid)) {
-                        this.userAccountRepo.createSummonerAccount(summonerAccountInfo);
-                    }
-                    return response.data;
+                    const lolAccountData = response.data;
+                    this.userAccountRepo.createSummonerAccount(lolAccountData);
+                    return lolAccountData;
                 }),
             )
         ).catch((err) => {
-            console.log(err.response);
             if (err.response.status === 404) {
                 return undefined;
             }
@@ -42,14 +45,10 @@ export class UserAccountService {
     async getRankedStatsBySummonerName(summonerName: string): Promise<RankedStatsDto[]> {
         const lolAccountDto = await this.getAccountByName(summonerName);
         if (lolAccountDto) {
-            const apiKey = this.configService.get<string>('RIOT_API_KEY');
-            const baseUrl = this.configService.get<string>('LOL_NA_BASE_URL');
-
-            const path = `/lol/league/v4/entries/by-summoner/${lolAccountDto.id}?api_key=${apiKey}`;
-            const fullPath = baseUrl + path;
+            const path = this.getRequestPath(`/lol/league/v4/entries/by-summoner/${lolAccountDto.id}`);
 
             return firstValueFrom(
-                this.httpService.get<RankedStatsDto[]>(fullPath).pipe(
+                this.httpService.get<RankedStatsDto[]>(path).pipe(
                     map(response => response.data),
                 )
             ).catch((err) => {
