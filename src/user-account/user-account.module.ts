@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { UserAccountService } from './user-account.service';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
@@ -12,7 +12,7 @@ import { UserAccountRepository } from './user-account.repository';
       envFilePath: '.env.development'
     }),
   ],
-  providers: [UserAccountService, UserAccountRepository],
+  providers: [UserAccountService, UserAccountRepository, Logger],
   controllers: [UserAccountController]
 })
 export class UserAccountModule {}

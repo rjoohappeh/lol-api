@@ -5,4 +5,7 @@ node_modules
 .env
 .env.development
 
+prisma/dev.db
+prisma/dev.db-journal
+
 dist

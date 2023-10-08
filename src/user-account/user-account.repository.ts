@@ -1,15 +1,17 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { LoLAccountDto } from "./user-account-types";
 
 @Injectable()
 export class UserAccountRepository {
-    constructor(private readonly prismaService: PrismaService) {}
+    constructor(private readonly prismaService: PrismaService,
+        private readonly logger: Logger) {}
 
     async getSummonerAccount(data: Partial<Omit<LoLAccountDto, 'id'>>) {
         return await this.prismaService.summonerAccount.findFirstOrThrow({
             where: {
-                ...data
+                ...data,
+                name: data.name.toLowerCase(),
             }
         });
     }
@@ -23,11 +25,12 @@ export class UserAccountRepository {
     }
 
     async createSummonerAccount(data: LoLAccountDto) {
-        return this.prismaService.summonerAccount.create({
+        this.prismaService.summonerAccount.create({
             data: {
                 ...data,
-                revisionDate: new Date(data.revisionDate)
+                revisionDate: new Date(data.revisionDate),
+                name: data.name.toLowerCase(),
             }
-        });
+        }).then(() => this.logger.log(`Account information saved with name ${data.name}`));
     }
 }

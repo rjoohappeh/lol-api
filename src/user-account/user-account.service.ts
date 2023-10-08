@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom, map } from 'rxjs';
 import { LoLAccountDto, RankedStatsDto } from './user-account-types';
@@ -9,7 +9,8 @@ import { UserAccountRepository } from './user-account.repository';
 export class UserAccountService {
     constructor(private readonly httpService: HttpService, 
         private readonly configService: ConfigService,
-        private readonly userAccountRepo: UserAccountRepository) {}
+        private readonly userAccountRepo: UserAccountRepository,
+        private readonly logger: Logger) {}
 
     getRequestPath(apiRoute: string) {
         const apiKey = this.configService.get<string>('RIOT_API_KEY');
@@ -23,7 +24,7 @@ export class UserAccountService {
         try {
             return await this.userAccountRepo.getSummonerAccount({name});
         } catch (err) {
-            console.log('No account exists with the given name. Will attempt to retrieve and save one.');
+            this.logger.log(`No account exists with the name "${name}". Will attempt to retrieve and save one.`);
         }
         const path = this.getRequestPath(`/lol/summoner/v4/summoners/by-name/${name}`);
 
