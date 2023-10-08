@@ -7,10 +7,10 @@ import { UserAccountRepository } from './user-account.repository';
 
 @Injectable()
 export class UserAccountService {
-    constructor(private readonly httpService: HttpService, 
-        private readonly configService: ConfigService,
-        private readonly userAccountRepo: UserAccountRepository,
-        private readonly logger: Logger) {}
+    constructor(private httpService: HttpService, 
+        private configService: ConfigService,
+        private userAccountRepo: UserAccountRepository,
+        private logger: Logger) {}
 
     getRequestPath(apiRoute: string) {
         const apiKey = this.configService.get<string>('RIOT_API_KEY');

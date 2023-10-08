@@ -4,8 +4,8 @@ import { LoLAccountDto } from "./user-account-types";
 
 @Injectable()
 export class UserAccountRepository {
-    constructor(private readonly prismaService: PrismaService,
-        private readonly logger: Logger) {}
+    constructor(private prismaService: PrismaService,
+        private logger: Logger) {}
 
     async getSummonerAccount(data: Partial<Omit<LoLAccountDto, 'id'>>) {
         return await this.prismaService.summonerAccount.findFirstOrThrow({

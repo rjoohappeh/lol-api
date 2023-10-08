@@ -6,7 +6,7 @@ import { NotFoundInterceptor } from '../interceptors/not-found.interceptor';
 @Controller('user-account')
 export class UserAccountController {
 
-    constructor(private readonly userAccountService: UserAccountService) {}
+    constructor(private userAccountService: UserAccountService) {}
 
     @Get('/:name')
     @UseInterceptors(new NotFoundInterceptor("No account found with that summoner name"))
