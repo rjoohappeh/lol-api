@@ -7,9 +7,9 @@ export function createFakeLolAccountDto(lolAccountDto?: Partial<LoLAccountDto>):
         accountId: faker.string.uuid(),
         puuid: faker.string.uuid(),
         name: faker.person.firstName() + faker.person.lastName(),
-        profileIconId: faker.number.int(),
-        revisionDate: faker.date.past().getTime(),
-        summonerLevel: faker.number.int(),
+        profileIconId: faker.number.int({min: 0, max: 5000}),
+        revisionDate: faker.date.past(),
+        summonerLevel: faker.number.int({min: 0, max: 5000}),
         ...lolAccountDto
     };
 }

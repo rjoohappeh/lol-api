@@ -30,9 +30,9 @@ export class UserAccountService {
 
         return firstValueFrom(
             this.httpService.get<LoLAccountDto>(path).pipe(
-                map(response => {
+                map(async (response) => {
                     const lolAccountData = response.data;
-                    this.userAccountRepo.createSummonerAccount(lolAccountData);
+                    await this.userAccountRepo.createSummonerAccount(lolAccountData);
                     return lolAccountData;
                 }),
             )

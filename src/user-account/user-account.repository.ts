@@ -19,13 +19,14 @@ export class UserAccountRepository {
     async summonerAccountExists(data: Partial<Omit<LoLAccountDto, 'id'>>) {
         return await this.prismaService.summonerAccount.count({
             where: {
-                ...data
+                ...data,
+                name: data.name.toLowerCase()
             }
         }) !== 0;
     }
 
     async createSummonerAccount(data: LoLAccountDto) {
-        this.prismaService.summonerAccount.create({
+        const account = await this.prismaService.summonerAccount.create({
             data: {
                 ...data,
                 revisionDate: new Date(data.revisionDate),
